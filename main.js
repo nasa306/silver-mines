@@ -18,27 +18,32 @@ const storyData = {
         text:"start of game - test",
         choices:[
             {text:"Go to the mine", next:"mine", silver:10},
-            {text:"Rest at home", next:"home"}
+            {text:"Rest at home", next:"base"}
         ]
     },
     mine:{
         text:"You go to the mine and find some silver.",
         choices:[
-            {text:"Go back home", next:"home"}
-        ]
-    },
-    home:{
-        text:"You rest at home and recover.",
-        choices:[
-            {text:"Go to the mine", next:"mine", silver:10},
-            {text:"Rest at home", next:"home"}
+            {text:"Go back home", next:"base"}
         ]
     },
     base:{
         text:"base",
         choice:[
-            {text:"Build a house (" + housecost + " silver)", interaction:"housebuilding"}
+            {text:"Build a house (" + housecost + " silver)", interaction:"housebuilding"},
             {text:"Go mining", next:"mine"}
+        ]
+    },
+    canbuildhouse:{
+        text:"You built a house and increased your population limit.",
+        choices:[
+            {text:"Go back to base", next:"base"}
+        ]
+    },
+    cannotbuildhouse:{
+        text:"You don't have enough silver to build a house.",
+        choices:[
+            {text:"Go back to base", next:"base"}
         ]
     }
 };
@@ -61,11 +66,13 @@ function showNode(nodeName){
             if (choice.silver) {
                 updateSilver(choice.silver);
             }
-            lf (choice.next){
+            if (choice.next){
                 showNode(choice.next);
             }
             if (choice.interaction){
-                //INTERACTION
+                if (choice.interaction == "housebuilding"){
+                    
+                }
             }
         };
         buttonsdiv.appendChild(button);
