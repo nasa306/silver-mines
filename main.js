@@ -13,6 +13,7 @@ const minerdisp = document.getElementById("miners");
 const soldierdisp = document.getElementById("soldiers");
 let population = 0, maxpopulation = 10, soldiers = 0, miners = 0, ownedMines = 1, day = 1;
 const storyData = {
+    // test storyline
     start:{
         text:"start of game - test",
         choices:[
@@ -32,6 +33,13 @@ const storyData = {
             {text:"Go to the mine", next:"mine", silver:10},
             {text:"Rest at home", next:"home"}
         ]
+    },
+    base:{
+        text:"base",
+        choice:[
+            {text:"Build a house (" + housecost + " silver)", interaction:"housebuilding"}
+            {text:"Go mining", next:"mine"}
+        ]
     }
 };
 console.log("test");
@@ -41,6 +49,9 @@ function updateSilver(amount){
 }
 function showNode(nodeName){
     const node = storyData[nodeName];
+    if (nodeName == "housebuilding"){
+        
+    }
     storydiv.textContent = node.text;
     buttonsdiv.innerHTML = "";
     node.choices.forEach(choice => {
@@ -50,7 +61,12 @@ function showNode(nodeName){
             if (choice.silver) {
                 updateSilver(choice.silver);
             }
-            showNode(choice.next);
+            lf (choice.next){
+                showNode(choice.next);
+            }
+            if (choice.interaction){
+                //INTERACTION
+            }
         };
         buttonsdiv.appendChild(button);
     });
