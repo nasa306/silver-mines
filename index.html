@@ -1,0 +1,27 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="title"> A Dark Silver Mine</title>
+   <link rel="stylesheet" href="style.css">
+</head>
+<body>
+        <div id="game">
+        <center>
+            <div id="topbar" style="white-space: nowrap;">
+                [Silver: <span id="silver" style="white-space: nowrap;">0</span>]
+                [Population: <span id="population" style="white-space: nowrap;">0</span> / <span id="populationLimit">0</span>]
+                [Miners: <span id="miners" style="white-space: nowrap;">0</span> / <span id="idle">0</span>  <button id="small" onclick="addMiner()">↑</button> <button id="small" onclick="unassignMiner()">↓</button>]
+                [Soldiers: <span id="soldiers" style="white-space: nowrap;">0</span> / <span id="sameidlebutwontworkifireuseforsomereason" style="white-space: nowrap;">0</span>  <button id="small" onclick="addSoldier()">↑</button> <button id="small" onclick="unassignSoldier()">↓</button>]
+                [Day: <span id="day" style="white-space: nowrap;">1</span>]
+            </div>
+        </center>
+        <div id="story">
+            Loading...
+        </div>
+        <div id="buttons">
+        </div>
+    </div>
+    <script src="main.js"></script>
+</html>

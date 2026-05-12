@@ -1,0 +1,60 @@
+body {
+    background: black;
+    color: white;
+    font-family: Georgia, serif;
+
+    display: flex;
+    justify-content: center;
+
+    margin-top: 50px;
+}
+
+#game {
+    width: auto;
+}
+
+#topbar {
+    margin-bottom: 20px;
+    font-size: 20px;
+}
+
+#storyText {
+    min-height: 120px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+button:not(#small) {
+    display: block;
+
+    background: black;
+    color: white;
+
+    border: 1px solid white;
+
+    padding: 10px;
+    margin-bottom: 10px;
+
+    width: 100%;
+
+    cursor: pointer;
+}
+button:is(#small) {
+    display: inline-block;
+    width: auto;
+    margin: 0 5px;
+        background: black;
+    color: white;
+
+    border: 1px solid white;
+    cursor:pointer
+}
+span:is(#topbar){
+    display: block;
+    margin-right: 20px;
+    width: 100%;
+}
+button:hover {
+    background: white;
+    color: black;
+}
