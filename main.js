@@ -59,6 +59,11 @@ const interactions = {
         }
     }
 };
+const interactionText = {
+  housebuilding: function(){
+      return "Build a house (" + housecost + " silver)";
+  }  
+};
 console.log("test");
 function updateSilver(amount){
     silver += amount;
@@ -78,6 +83,9 @@ function showNode(nodeName){
     node.choices.forEach(choice => {
         const button = document.createElement("button");
         button.textContent = choice.text;
+        if (choice.interaction){
+            button.textContent = interactionText[choice.interaction]();
+        }
         button.onclick = () => {
             if (choice.silver) {
                 updateSilver(choice.silver);
@@ -86,9 +94,7 @@ function showNode(nodeName){
                 showNode(choice.next);
             }
             if (choice.interaction){
-                if (choice.interaction == "housebuilding"){
-                    button.textContent = "Build house (" + housecost + " silver)";
-                }
+                interactions[choice.interaction]();  // Call the function directly instead of using eval()
             }
         };
         buttonsdiv.appendChild(button);
@@ -125,6 +131,7 @@ function buildHouse(){
     if (silver >= housecost){
         silver -= housecost;
         maxpopulation += 4;
+        updateSilver(0-housecost);
         housecost = Math.floor(housecost * 1.5);
         updateUI();
     }
