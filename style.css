@@ -54,6 +54,38 @@ span:is(#topbar){
     margin-right: 20px;
     width: 100%;
 }
+div:is(#midsection){
+    display: flex;
+    width:100%;
+}
+.log {
+    width: 300px;
+    height: 300px;
+    border: 1px solid white;
+    padding: 10px;
+    overflow-y: auto;
+      --fade-height: 30px;
+  
+  /* Create the mask gradient */
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    black var(--fade-height),
+    black calc(100% - var(--fade-height)),
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    black var(--fade-height),
+    black calc(100% - var(--fade-height)),
+    transparent 100%
+  );
+}
+.storycontainer {
+    flex: 1;
+    margin-right: 20px;
+}
 button:hover {
     background: white;
     color: black;

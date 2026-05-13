@@ -11,6 +11,7 @@ const idledisp = document.getElementById("idle");
 const otheridledisp = document.getElementById("sameidlebutwontworkifireuseforsomereason");
 const minerdisp = document.getElementById("miners");
 const soldierdisp = document.getElementById("soldiers");
+const logdiv = document.getElementById("log");
 let population = 0, maxpopulation = 10, soldiers = 0, miners = 0, ownedMines = 1, day = 1;
 const storyData = {
     // test storyline
@@ -29,9 +30,9 @@ const storyData = {
     },
     base:{
         text:"base",
-        choice:[
+        choices:[
             {text:"Build a house (" + housecost + " silver)", interaction:"housebuilding"},
-            {text:"Go mining", next:"mine"}
+            {text:"Go mining", next:"mine", silver:10}
         ]
     },
     canbuildhouse:{
@@ -47,10 +48,26 @@ const storyData = {
         ]
     }
 };
+const interactions = {
+    housebuilding: function() {
+        if (silver >= housecost) {
+            buildHouse();
+            showNode("canbuildhouse");
+        } else {
+            showNode("cannotbuildhouse");
+        }
+    }
+};
 console.log("test");
 function updateSilver(amount){
     silver += amount;
     silverdisp.textContent = silver;
+}
+function addLog(text) {
+    const line = document.createElement("div");
+    line.textContent = text;
+
+    logdiv.prepend(line);
 }
 function showNode(nodeName){
     const node = storyData[nodeName];
@@ -71,7 +88,7 @@ function showNode(nodeName){
             }
             if (choice.interaction){
                 if (choice.interaction == "housebuilding"){
-                    
+                    button.textContent = "Build house (" + housecost + " silver)";
                 }
             }
         };
