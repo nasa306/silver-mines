@@ -86,7 +86,7 @@ function showNode(nodeName){
                 showNode(choice.next);
             }
             if (choice.interaction){
-                eval(interactions[choice.interaction];
+                interactions[choice.interaction]();  // Call the function directly instead of using eval()
             }
         };
         buttonsdiv.appendChild(button);
