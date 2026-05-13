@@ -124,6 +124,7 @@ function buildHouse(){
         silver -= housecost;
         maxpopulation += 4;
         housecost = Math.floor(housecost * 1.5);
+        updateSilver();
         updateUI();
     }
 }
