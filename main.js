@@ -59,6 +59,11 @@ const interactions = {
         }
     }
 };
+const interactionText = {
+  housebuilding: function(){
+      return "Build a house (" + housecost + " silver)";
+  }  
+};
 console.log("test");
 function updateSilver(amount){
     silver += amount;
@@ -78,6 +83,9 @@ function showNode(nodeName){
     node.choices.forEach(choice => {
         const button = document.createElement("button");
         button.textContent = choice.text;
+        if (choice.interaction){
+            button.textContent = interactionText[choice.interaction];
+        }
         button.onclick = () => {
             if (choice.silver) {
                 updateSilver(choice.silver);
