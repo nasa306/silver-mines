@@ -86,9 +86,7 @@ function showNode(nodeName){
                 showNode(choice.next);
             }
             if (choice.interaction){
-                if (choice.interaction == "housebuilding"){
-                    button.textContent = "Build house (" + housecost + " silver)";
-                }
+                eval(interactions[choice.interaction];
             }
         };
         buttonsdiv.appendChild(button);
