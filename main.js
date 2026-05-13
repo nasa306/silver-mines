@@ -84,7 +84,7 @@ function showNode(nodeName){
         const button = document.createElement("button");
         button.textContent = choice.text;
         if (choice.interaction){
-            button.textContent = interactionText[choice.interaction];
+            button.textContent = interactionText[choice.interaction]();
         }
         button.onclick = () => {
             if (choice.silver) {
