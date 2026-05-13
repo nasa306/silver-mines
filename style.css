@@ -58,12 +58,13 @@ div:is(#midsection){
     display: flex;
     width:100%;
 }
-.log {
+div:is(#log){
     width: 300px;
     height: 300px;
     border: 1px solid white;
     padding: 10px;
-    overflow-y: auto;
+    margin-right:20px;
+    overflow-y: clip;
       --fade-height: 30px;
   
   /* Create the mask gradient */
@@ -82,9 +83,9 @@ div:is(#midsection){
     transparent 100%
   );
 }
-.storycontainer {
+div:is(#storycontainer) {
     flex: 1;
-    margin-right: 20px;
+    margin-left: 20px;
 }
 button:hover {
     background: white;

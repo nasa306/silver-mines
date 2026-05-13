@@ -53,6 +53,7 @@ const interactions = {
         if (silver >= housecost) {
             buildHouse();
             showNode("canbuildhouse");
+            updateUI();
         } else {
             showNode("cannotbuildhouse");
         }
@@ -71,9 +72,7 @@ function addLog(text) {
 }
 function showNode(nodeName){
     const node = storyData[nodeName];
-    if (nodeName == "housebuilding"){
-        
-    }
+
     storydiv.textContent = node.text;
     buttonsdiv.innerHTML = "";
     node.choices.forEach(choice => {
@@ -128,6 +127,15 @@ function buildHouse(){
         maxpopulation += 4;
         housecost = Math.floor(housecost * 1.5);
         updateUI();
+    }
+}
+function forcesettlers(amount){
+    population += amount;
+    if (population > maxpopulation){
+        population = maxpopulation;
+        for (let i = 0; i < amount; i++) {
+            addLog("A person joined your town.");
+        }
     }
 }
 function tryAddSettler() {
