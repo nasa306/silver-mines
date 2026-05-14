@@ -79,12 +79,13 @@ const interactions = {
             }
         }
         population -= lostPopulation;
-        if (lostPopulation < soldiers) {soldiers -= lostPopulation; const gainedSilver = lostPopulation * 5; updateSilver(gainedSilver);}
+        let stolenSivler;
+        if (lostPopulation < soldiers) {soldiers -= lostPopulation; gainedSilver = lostPopulation * 5; updateSilver(gainedSilver);}
         else {
             soldiers = 0; 
             lostPopulation -= soldiers;
             miners = Math.max(0, miners - lostPopulation);
-            const stolenSilver = Math.min(silver, lostPopulation * 5);
+            stolenSilver = Math.min(silver, lostPopulation * 5);
             updateSilver(0 - stolenSilver);
         }
         if (lostPopulation > 0) addLog("Bandits attacked your town! They stole " + stolenSilver + " silverand you lost " + lostPopulation + " people.");
