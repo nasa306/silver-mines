@@ -60,6 +60,14 @@ const interactions = {
         } else {
             showNode("cannotbuildhouse");
         }
+    },
+    minecollapseEvent: function() {
+        const lostMiners = Math.min(miners, Math.floor(Math.random() * 3) + 1);
+        miners -= lostMiners;
+        population -= lostMiners;
+        addLog("The mine collapsed! You lost " + lostMiners + " miners.");
+        hideEvent();
+        updateUI();
     }
 };
 const interactionText = {
@@ -67,21 +75,33 @@ const interactionText = {
       return "Build a house (" + housecost + " silver)";
   }  
 };
+const eventsData = {
+    // test event
+    minecollapse:{
+        text:"The mine collapsed! You lost some miners.",
+        choices:[
+            {text:"Continue", interaction:"minecollapseEvent"}
+        ]
+    }
+}
 console.log("test");
 function updateSilver(amount){
     silver += amount;
     silverdisp.textContent = silver;
 }
-function showEvent(text, choices){
-    eventtext.textContent = text;
+function showEvent(eventName){
+    const event = eventsData[eventName];
+    eventtext.textContent = event.text;
     eventbuttons.innerHTML = "";
     eventpopup.style.display = "flex";
-    choices.forEach(element => {
+    event.choices.forEach(element => {
         const button = document.createElement("button");
         button.textContent = element.text;
         eventbuttons.appendChild(button);
         button.onclick = () => {
-
+            if (element.interaction){
+                interactions[element.interaction](); 
+            }
         }
     });
 }
@@ -184,6 +204,7 @@ function updateUI(){
 
 //loop
 function gameLoop(){
+    if (eventpopup.style.display == "flex") return;
     silver += miners;
     silver -= soldiers;
     timecounter++;
