@@ -1,6 +1,7 @@
 let silver = 0;
 let timecounter = 0;
 let housecost = 20;
+let eventActive = false;
 const eventpopup = document.getElementById("eventpopup");
 const eventtext = document.getElementById("eventtext");
 const eventbuttons = document.getElementById("eventbuttons");
@@ -68,6 +69,28 @@ const interactions = {
         addLog("The mine collapsed! You lost " + lostMiners + " miners.");
         hideEvent();
         updateUI();
+    },
+    banditAttack: function() {
+        const gainedSilver = -1;
+        const lostPopulation = Math.min(population, Math.floor(Math.random() * 5) + 1);
+        for (let i = 0; i < soldiers; i++) {
+            if (Math.random() < 0.5 + soldiers / (soldiers+10)) { 
+                lostPopulation--;
+            }
+        }
+        population -= lostPopulation;
+        if (lostPopulation < soldiers) {soldiers -= lostPopulation; const gainedSilver = lostPopulation * 5; updateSilver(gainedSilver);}
+        else {
+            soldiers = 0; 
+            lostPopulation -= soldiers;
+            miners = Math.max(0, miners - lostPopulation);
+            const stolenSilver = Math.min(silver, lostPopulation * 5);
+            updateSilver(0 - stolenSilver);
+        }
+        if (lostPopulation > 0) addLog("Bandits attacked your town! They stole " + stolenSilver + " silverand you lost " + lostPopulation + " people.");
+        if (gainedSilver > 0) addLog("Bandits attacked your town but your soldiers fought them off! You gained " + gainedSilver + " silver.");
+        hideEvent();
+        updateUI();
     }
 };
 const interactionText = {
@@ -76,7 +99,13 @@ const interactionText = {
   }  
 };
 const eventsData = {
-    // test event
+    // test events
+    bandits:{
+        text:"Bandits are attacking your town!",
+        choices:[
+            {text:"Continue", interaction:"banditAttack"}
+        ]
+    },
     minecollapse:{
         text:"The mine collapsed! You lost some miners.",
         choices:[
@@ -91,6 +120,7 @@ function updateSilver(amount){
 }
 function showEvent(eventName){
     const event = eventsData[eventName];
+    eventActive = true;
     eventtext.textContent = event.text;
     eventbuttons.innerHTML = "";
     eventpopup.style.display = "flex";
@@ -106,6 +136,7 @@ function showEvent(eventName){
     });
 }
 function hideEvent(){
+    eventActive = false;
     eventpopup.style.display = "none";
 }
 function addLog(text) {
@@ -185,7 +216,7 @@ function forcesettlers(amount){
 }
 function tryAddSettler() {
     if (population < maxpopulation) {
-        if (Math.random() < 0.05) {
+        if (Math.random() < 0.05 * (1 + population / maxpopulation)) { 
             population++;
             addLog("A person joined your town.");
         }
@@ -201,7 +232,15 @@ function updateUI(){
     idledisp.textContent = getIdle();
     otheridledisp.textContent = getIdle();
 }
-
+function tryshowEvent(){
+    if (!eventActive && Math.random() < (0.0005 * Math.sqrt(miners) / ownedMines)) {
+        showEvent("minecollapse");
+    } else {
+        if (!eventActive && Math.random() < 0.001 + Math.sqrt(silver) * 0.0001) {
+            showEvent("bandits");
+        }
+    }
+}
 //loop
 function gameLoop(){
     if (eventpopup.style.display == "flex") return;
