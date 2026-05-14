@@ -249,6 +249,7 @@ function gameLoop(){
     timecounter++;
     day = timecounter%60 == 0 ? day+1 : day;
     tryAddSettler();
+    tryshowEvent();
     updateUI();
 }
 showNode("start");
