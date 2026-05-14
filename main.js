@@ -1,6 +1,9 @@
 let silver = 0;
 let timecounter = 0;
 let housecost = 20;
+const eventpopup = document.getElementById("eventpopup");
+const eventtext = document.getElementById("eventtext");
+const eventbuttons = document.getElementById("eventbuttons");
 const storydiv = document.getElementById("story");
 const buttonsdiv = document.getElementById("buttons");
 const silverdisp = document.getElementById("silver");
@@ -69,6 +72,22 @@ function updateSilver(amount){
     silver += amount;
     silverdisp.textContent = silver;
 }
+function showEvent(text, choices){
+    eventtext.textContent = text;
+    eventbuttons.innerHTML = "";
+    eventpopup.style.display = "flex";
+    choices.forEach(element => {
+        const button = document.createElement("button");
+        button.textContent = element.text;
+        eventbuttons.appendChild(button);
+        button.onclick = () => {
+
+        }
+    });
+}
+function hideEvent(){
+    eventpopup.style.display = "none";
+}
 function addLog(text) {
     const line = document.createElement("div");
     line.textContent = text;
@@ -129,7 +148,6 @@ function unassignSoldier(){
 }
 function buildHouse(){
     if (silver >= housecost){
-        silver -= housecost;
         maxpopulation += 4;
         updateSilver(0-housecost);
         housecost = Math.floor(housecost * 1.5);

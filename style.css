@@ -13,16 +13,11 @@ body {
     width: auto;
 }
 
-#topbar {
+div:is(#topbar) {
     margin-bottom: 20px;
     font-size: 20px;
 }
 
-#storyText {
-    min-height: 120px;
-    line-height: 1.5;
-    margin-bottom: 20px;
-}
 
 button:not(#small) {
     display: block;
@@ -84,6 +79,33 @@ div:is(#log){
   );
 }
 div:is(#storycontainer) {
+    flex: 1;
+    margin-left: 20px;
+}
+div:is(#eventpopup) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+div:is(#eventcontent) {
+    background: black;
+    color: white;
+    border: 2px solid white;
+    padding: 20px;
+    width: 400px;
+}
+div:is(#eventbuttons) {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+div:is(#eventtext) {
     flex: 1;
     margin-left: 20px;
 }
