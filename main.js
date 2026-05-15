@@ -1,3 +1,4 @@
+//-------------data------------//
 let silver = 0;
 let timecounter = 0;
 let housecost = 20;
@@ -71,27 +72,43 @@ const interactions = {
         updateUI();
     },
     banditAttack: function() {
-        const gainedSilver = -1;
-        const lostPopulation = Math.min(population, Math.floor(Math.random() * 5) + 1);
+        let gainedSilver = -1;
+        let lostPopulation = Math.min(population, Math.floor(Math.random() * 5) + 1);
         for (let i = 0; i < soldiers; i++) {
             if (Math.random() < 0.5 + soldiers / (soldiers+10)) { 
                 lostPopulation--;
             }
         }
+        lostPopulation = Math.max(0, lostPopulation);
         population -= lostPopulation;
-        let stolenSivler;
+        let stolenSilver;
         if (lostPopulation < soldiers) {soldiers -= lostPopulation; gainedSilver = lostPopulation * 5; updateSilver(gainedSilver);}
         else {
-            soldiers = 0; 
             lostPopulation -= soldiers;
+            soldiers = 0; 
             miners = Math.max(0, miners - lostPopulation);
             stolenSilver = Math.min(silver, lostPopulation * 5);
             updateSilver(0 - stolenSilver);
         }
-        if (lostPopulation > 0) addLog("Bandits attacked your town! They stole " + stolenSilver + " silverand you lost " + lostPopulation + " people.");
-        if (gainedSilver > 0) addLog("Bandits attacked your town but your soldiers fought them off! You gained " + gainedSilver + " silver.");
+        if (lostPopulation > 0) addLog("Bandits attacked your town! They stole " + stolenSilver + " silver and you lost " + lostPopulation + " people.");
+        else addLog("Bandits attacked your town but your soldiers fought them off! You gained " + gainedSilver + " silver.");
         hideEvent();
         updateUI();
+    },
+    raidMineInteraction: function() {
+        const successChance = 0.5 + soldiers / (soldiers + 10);
+        let lostSoldiers = Math.min(soldiers, Math.floor(Math.random() * 3) + 1);
+        if (Math.random() < successChance) {
+            ownedMines++;
+            lostSoldiers = Math.min(soldiers, 1 + Math.floor(Math.random() * 2));
+            population -= lostSoldiers;
+            soldiers -= lostSoldiers;
+            addLog("You successfully raided the mine and now own " + ownedMines + " mines! However, you lost " + lostSoldiers + " soldiers in the process.");
+        } else {
+            soldiers -= lostSoldiers;
+            population -= lostSoldiers;
+            addLog("The raid failed! You lost " + lostSoldiers + " soldiers.");
+        }
     }
 };
 const interactionText = {
@@ -112,6 +129,13 @@ const eventsData = {
         choices:[
             {text:"Continue", interaction:"minecollapseEvent"}
         ]
+    },
+    raidMine:{
+        text:"An abandomed mine was found nearby, but it's guarded by bandits. Do you want to raid it?",
+        choices:[
+            {text:"Yes", interaction:"raidMineInteraction"},
+            {text:"No", next:"base"}
+        ]
     }
 }
 console.log("test");
@@ -119,6 +143,7 @@ function updateSilver(amount){
     silver += amount;
     silverdisp.textContent = silver;
 }
+//-------------events-------------//
 function showEvent(eventName){
     const event = eventsData[eventName];
     eventActive = true;
@@ -133,6 +158,10 @@ function showEvent(eventName){
             if (element.interaction){
                 interactions[element.interaction](); 
             }
+            if (element.next){
+                hideEvent();
+                showNode(element.next);
+            }
         }
     });
 }
@@ -140,12 +169,52 @@ function hideEvent(){
     eventActive = false;
     eventpopup.style.display = "none";
 }
+function tryshowEvent(){
+    if (!eventActive && Math.random() < (0.0008 * Math.sqrt(miners) / ownedMines)) {
+        showEvent("minecollapse");
+    } else if (!eventActive && Math.random() < 0.001 + Math.sqrt(silver) * 0.0001) {
+         showEvent("bandits");
+    } else if (!eventActive && Math.random() < 0.001 + Math.sqrt(day) && soldiers > population * 0.1) {
+        showEvent("raidMine");
+    }
+}
+//-------------log systems-------------//
+let logQueue = [];
+function queueLog(text, chance = 1) {
+    if (Math.random() < chance) {
+        logQueue.push(text);
+    }
+}
+function processLogQueue() {
+    while (logQueue.length > 0) {
+        addLog(logQueue.shift());
+    }
+}
+function passiveLogs() {
+    if (Math.random() < 0.1) {
+        if (miners > maxpopulation * 0.75) {
+            queueLog("The mines are bustling with activity.", 0.1);
+        } else if (miners > maxpopulation * 0.5) {
+            queueLog("The mines are busy.", 0.1);
+        } else if (miners > maxpopulation * 0.1) {
+            queueLog("The mines are quiet.", 0.1);
+        }
+        if (soldiers > maxpopulation * 0.25) {
+            queueLog("Your soldiers are keeping the town safe.", 0.1);
+        } else if (soldiers > maxpopulation * 0.1) {
+            queueLog("Your soldiers are on patrol.", 0.1);
+        } else if (soldiers > 0) {
+            queueLog("Your soldiers have too much on their plate.", 0.1);
+        }
+    }
+}
 function addLog(text) {
     const line = document.createElement("div");
     line.textContent = text;
 
     logdiv.prepend(line);
 }
+//-------------story-------------//
 function showNode(nodeName){
     const node = storyData[nodeName];
 
@@ -171,6 +240,7 @@ function showNode(nodeName){
         buttonsdiv.appendChild(button);
     });
 }
+//-------------population------------//
 function getIdle(){
     return population - miners - soldiers;
 }
@@ -202,7 +272,7 @@ function buildHouse(){
     if (silver >= housecost){
         maxpopulation += 4;
         updateSilver(0-housecost);
-        housecost = Math.floor(housecost * 1.5);
+        housecost = Math.floor(housecost * 1.25);
         updateUI();
     }
 }
@@ -217,7 +287,7 @@ function forcesettlers(amount){
 }
 function tryAddSettler() {
     if (population < maxpopulation) {
-        if (Math.random() < 0.05 * (1 + population / maxpopulation)) { 
+        if (Math.random() < (maxpopulation - population) * 0.01) { 
             population++;
             addLog("A person joined your town.");
         }
@@ -233,22 +303,18 @@ function updateUI(){
     idledisp.textContent = getIdle();
     otheridledisp.textContent = getIdle();
 }
-function tryshowEvent(){
-    if (!eventActive && Math.random() < (0.0005 * Math.sqrt(miners) / ownedMines)) {
-        showEvent("minecollapse");
-    } else {
-        if (!eventActive && Math.random() < 0.001 + Math.sqrt(silver) * 0.0001) {
-            showEvent("bandits");
-        }
-    }
-}
-//loop
+
+//-------------loop------------//
 function gameLoop(){
     if (eventpopup.style.display == "flex") return;
-    silver += miners;
-    silver -= soldiers;
+    silver += miners * 0.2;
     timecounter++;
-    day = timecounter%60 == 0 ? day+1 : day;
+    if (timecounter % 60 == 0) {
+        day++;
+        silver -= soldiers * 2;
+    }
+    passiveLogs();
+    processLogQueue();
     tryAddSettler();
     tryshowEvent();
     updateUI();
