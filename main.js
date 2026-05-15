@@ -160,8 +160,7 @@ function showEvent(eventName){
         button.onclick = () => {
             if (element.interaction){
                 interactions[element.interaction](); 
-            }
-            if (element.next){
+            } else if (element.next){
                 hideEvent();
                 showNode(element.next);
             }
@@ -173,7 +172,7 @@ function hideEvent(){
     eventpopup.style.display = "none";
 }
 function tryshowEvent(){
-    if (!eventActive && Math.random() < (0.0008 * Math.sqrt(miners) / ownedMines)) {
+    if (!eventActive && Math.random() < 0.0008 * Math.sqrt(miners) / ownedMines) {
         showEvent("minecollapse");
     } else if (!eventActive && Math.random() < 0.001 + Math.sqrt(silver) * 0.0001) {
          showEvent("bandits");
@@ -317,11 +316,12 @@ function updateUI(){
 //-------------loop------------//
 function gameLoop(){
     if (eventpopup.style.display == "flex") return;
-    silver += miners * 0.2;
+    silver += miners * 0.3 * ownedMines;
     timecounter++;
     if (timecounter % 60 == 0) {
         day++;
-        silver -= soldiers * 2;
+        
+        silver -= Math.floor(soldiers * 0.5);
     }
     passiveLogs();
     processLogQueue();
