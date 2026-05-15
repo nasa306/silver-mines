@@ -177,7 +177,7 @@ function tryshowEvent(){
         showEvent("minecollapse");
     } else if (!eventActive && Math.random() < 0.001 + Math.sqrt(silver) * 0.0001) {
          showEvent("bandits");
-    } else if (!eventActive && Math.random() < 0.001 + Math.sqrt(day) && soldiers > 10) {
+    } else if (!eventActive && Math.random() < 0.001 + Math.sqrt(day) && soldiers > 10 ) {
         showEvent("raidMine");
     }
 }
@@ -213,8 +213,7 @@ function passiveLogs() {
 }
 function addLog(text) {
     const line = document.createElement("div");
-    line.textContent = text;
-
+    line.textContent = text + " \n";
     logdiv.prepend(line);
 }
 //-------------story-------------//
