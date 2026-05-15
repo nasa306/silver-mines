@@ -3,6 +3,7 @@ let silver = 0;
 let timecounter = 0;
 let housecost = 20;
 let eventActive = false;
+const ownedMinesdisp = document.getElementById("ownedMines");
 const eventpopup = document.getElementById("eventpopup");
 const eventtext = document.getElementById("eventtext");
 const eventbuttons = document.getElementById("eventbuttons");
@@ -109,6 +110,8 @@ const interactions = {
             population -= lostSoldiers;
             addLog("The raid failed! You lost " + lostSoldiers + " soldiers.");
         }
+        hideEvent();
+        updateUI();
     }
 };
 const interactionText = {
@@ -141,7 +144,7 @@ const eventsData = {
 console.log("test");
 function updateSilver(amount){
     silver += amount;
-    silverdisp.textContent = silver;
+    silverdisp.textContent = Math.floor(silver);
 }
 //-------------events-------------//
 function showEvent(eventName){
@@ -294,10 +297,11 @@ function tryAddSettler() {
     }
 }
 function updateUI(){
-    silverdisp.textContent = silver;
+    silverdisp.textContent = Math.floor(silver);
     populationdisp.textContent = population;
     populationlimit.textContent = maxpopulation;
     daydisp.textContent = day;
+    ownedMinesdisp.textContent = ownedMines;
     soldierdisp.textContent = soldiers;
     minerdisp.textContent = miners;
     idledisp.textContent = getIdle();
