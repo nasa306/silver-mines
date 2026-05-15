@@ -177,7 +177,7 @@ function tryshowEvent(){
         showEvent("minecollapse");
     } else if (!eventActive && Math.random() < 0.001 + Math.sqrt(silver) * 0.0001) {
          showEvent("bandits");
-    } else if (!eventActive && Math.random() < 0.001 + Math.sqrt(day) && soldiers > population * 0.1) {
+    } else if (!eventActive && Math.random() < 0.001 + Math.sqrt(day) && soldiers > 10) {
         showEvent("raidMine");
     }
 }
