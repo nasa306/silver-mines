@@ -213,8 +213,10 @@ function passiveLogs() {
 }
 function addLog(text) {
     const line = document.createElement("div");
-    line.textContent = text + "\n-----------";
+    line.textContent = text;
     logdiv.prepend(line);
+    logdiv.prepend("-------------");
+
 }
 //-------------story-------------//
 function showNode(nodeName){
