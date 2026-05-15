@@ -214,7 +214,11 @@ function passiveLogs() {
 function addLog(text) {
     const line = document.createElement("div");
     line.textContent = text;
-    logdiv.prepend("-------------");
+    const sep = document.createElement("div");
+    sep.textContent = "-------------";
+
+    logdiv.prepend(sep);
+    logdiv.prepend(line);
     logdiv.prepend(line);
     
 
