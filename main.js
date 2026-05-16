@@ -3,6 +3,7 @@ let silver = 0;
 let timecounter = 0;
 let housecost = 20;
 let eventActive = false;
+let phase = 1;
 const ownedMinesdisp = document.getElementById("ownedMines");
 const eventpopup = document.getElementById("eventpopup");
 const eventtext = document.getElementById("eventtext");
@@ -207,6 +208,12 @@ function passiveLogs() {
             queueLog("Your soldiers are on patrol.", 0.1);
         } else if (soldiers > 0) {
             queueLog("Your soldiers have too much on their plate.", 0.1);
+        }
+        if (phase == 1 && Math.random() < 0.05){
+            queueLog("Rumors of silver spread east.", 0.5);
+        } else if (Math.random() < 0.05){
+            queueLog("Prospectors arrive in small numbers.", 0.5);
+
         }
     }
 }
