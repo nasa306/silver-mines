@@ -18,7 +18,6 @@ div:is(#topbar) {
     font-size: 20px;
 }
 
-
 button:not(#small) {
     display: block;
 

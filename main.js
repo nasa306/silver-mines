@@ -22,6 +22,8 @@ const minerdisp = document.getElementById("miners");
 const soldierdisp = document.getElementById("soldiers");
 const logdiv = document.getElementById("log");
 let population = 0, maxpopulation = 10, soldiers = 0, miners = 0, ownedMines = 1, day = 1;
+let researchedTechs = [];
+let unresearchedTechs = ["Patio Process", "Stamp Mill", "Square Set Timbering", "Hydraulic Pumps", "Mercury Amalgamation", "Washoe Process", "Dynamite", "Dynamite+", "Dynamite++""];
 const storyData = {
     // test storyline
     start:{
@@ -41,6 +43,7 @@ const storyData = {
         text:"base",
         choices:[
             {text:"Build a house (" + housecost + " silver)", interaction:"housebuilding"},
+            {text:"Research new techniques", interaction:"research"},
             {text:"Go mining", next:"mine", silver:10}
         ]
     },
@@ -66,6 +69,9 @@ const interactions = {
         } else {
             showNode("cannotbuildhouse");
         }
+    },
+    research: function() {
+        
     },
     minecollapseEvent: function() {
         const lostMiners = Math.min(miners, Math.floor(Math.random() * 3) + 1);
@@ -137,7 +143,7 @@ const eventsData = {
         ]
     },
     raidMine:{
-        text:"An abandomed mine was found nearby, but it's guarded by bandits. Do you want to raid it?",
+        text:"An abandoned mine was found nearby, but it's guarded by bandits. Do you want to raid it?",
         choices:[
             {text:"Yes", interaction:"raidMineInteraction"},
             {text:"No", next:"base"}
@@ -201,7 +207,7 @@ function tryshowEvent(){
         showEvent("minecollapse");
     } else if (!eventActive && Math.random() < 0.001 + Math.sqrt(silver) * 0.0001) {
          showEvent("bandits");
-    } else if (!eventActive && Math.random() < 0.0005 + day * 0.00002 && soldiers > 10) {
+    } else if (!eventActive && Math.random() < 0.0005 + day * 0.0002 && soldiers > 10) {
         showEvent("raidMine");
     }
     if (!eventActive && phase == 2 && Math.random() < 0.0005) {
@@ -332,6 +338,8 @@ function buildHouse(){
         maxpopulation += 4;
         updateSilver(0-housecost);
         housecost = Math.floor(housecost * 1.25);
+        let houses = ["A new house was built.", "You built a house.", "Your town expands with a new house.", "A new home is constructed.", "🛖", "🏠", "🏘️","🏚️","🏡"];
+        addLog(houses[Math.floor(Math.random() * houses.length)]);
         updateUI();
     }
 }
