@@ -4,6 +4,8 @@ let timecounter = 0;
 let housecost = 20;
 let eventActive = false;
 let phase = 1;
+let railroad = 0; // 0 = no railroad, 1 = railroad with company influence, -1 = railroad with local influence
+let perspective = 0; // 0 = neutral, => company,  <= locals
 const ownedMinesdisp = document.getElementById("ownedMines");
 const eventpopup = document.getElementById("eventpopup");
 const eventtext = document.getElementById("eventtext");
@@ -140,6 +142,21 @@ const eventsData = {
             {text:"Yes", interaction:"raidMineInteraction"},
             {text:"No", next:"base"}
         ]
+    },
+    railroadArrives:{
+        text: "The railroad offers to expand into your region.",
+        choices: [
+            {
+                text: "Accept investment",
+                interaction: "railroadAccept",
+                perspective: "company"
+            },
+            {
+                text: "Reject and keep independence",
+                interaction: "railroadReject",
+                perspective: "locals"
+            }
+        ]
     }
 }
 console.log("test");
@@ -164,6 +181,13 @@ function showEvent(eventName){
             } else if (element.next){
                 hideEvent();
                 showNode(element.next);
+            } 
+            if (element.perspective) {
+                if (element.perspective === "company") {
+                    perspective += 1;
+                } else if (element.perspective === "locals") {
+                    perspective -= 1;
+                }
             }
         }
     });
@@ -177,7 +201,7 @@ function tryshowEvent(){
         showEvent("minecollapse");
     } else if (!eventActive && Math.random() < 0.001 + Math.sqrt(silver) * 0.0001) {
          showEvent("bandits");
-    } else if (!eventActive && Math.random() < 0.001 + Math.sqrt(day) && soldiers > 10 ) {
+    } else if (!eventActive && Math.random() < 0.0005 + day * 0.00002 && soldiers > 10) {
         showEvent("raidMine");
     }
     if (!eventActive && phase == 2 && Math.random() < 0.0005) {
