@@ -180,6 +180,12 @@ function tryshowEvent(){
     } else if (!eventActive && Math.random() < 0.001 + Math.sqrt(day) && soldiers > 10 ) {
         showEvent("raidMine");
     }
+    if (!eventActive && phase == 2 && Math.random() < 0.0005) {
+        showEvent("railroadArrives");
+    }
+    if (!eventActive && phase == 3 && Math.random() < 0.0005) {
+        showEvent("miningCompaniesArrive");
+    }
 }
 //-------------log systems-------------//
 let logQueue = [];
@@ -209,10 +215,20 @@ function passiveLogs() {
         } else if (soldiers > 0) {
             queueLog("Your soldiers have too much on their plate.", 0.1);
         }
+
+        // Phase-based logs
+        if (phase === 1 && population > 10 && Math.random() < 0.05){
+            queueLog("The town is starting to grow.", 0.5);
+        }
         if (phase == 1 && Math.random() < 0.05){
             queueLog("Rumors of silver spread east.", 0.5);
-        } else if (Math.random() < 0.05){
+        } else if (phase == 1 && Math.random() < 0.05){
             queueLog("Prospectors arrive in small numbers.", 0.5);
+        }
+        if (phase == 2 && Math.random() < 0.05){
+            queueLog("The settlement grows rapidly.", 0.5);
+        } else if (phase == 2 && Math.random() < 0.05){
+            queueLog("Merchants and gamblers arrive, bringing trade and excitement.", 0.5);
 
         }
     }
@@ -254,6 +270,10 @@ function showNode(nodeName){
         };
         buttonsdiv.appendChild(button);
     });
+}
+function updatePhase(){
+    if (population > 25 && phase == 1) phase = 2;
+    if (phase == 2 && ownedMines > 3) phase = 3;
 }
 //-------------population------------//
 function getIdle(){
