@@ -3,6 +3,7 @@ let silver = 0;
 let timecounter = 0;
 let housecost = 20;
 let eventActive = false;
+let researchCost = 50;
 let phase = 1;
 let railroad = 0; // 0 = no railroad, 1 = railroad with company influence, -1 = railroad with local influence
 let perspective = 0; // 0 = neutral, => company,  <= locals
@@ -23,7 +24,7 @@ const soldierdisp = document.getElementById("soldiers");
 const logdiv = document.getElementById("log");
 let population = 0, maxpopulation = 10, soldiers = 0, miners = 0, ownedMines = 1, day = 1;
 let researchedTechs = [];
-let unresearchedTechs = ["Patio Process", "Stamp Mill", "Square Set Timbering", "Hydraulic Pumps", "Mercury Amalgamation", "Washoe Process", "Dynamite", "Dynamite+", "Dynamite++""];
+let unresearchedTechs = ["Patio Process", "Stamp Mill", "Square Set Timbering", "Hydraulic Pumps", "Mercury Amalgamation", "Washoe Process", "Dynamite", "Dynamite+", "Dynamite++"];
 const storyData = {
     // test storyline
     start:{
@@ -71,7 +72,18 @@ const interactions = {
         }
     },
     research: function() {
-        
+        if (silver >= researchCost) {
+            updateSilver(0 - researchCost);
+            const newTech = unresearchedTechs.splice(Math.floor(Math.random() * unresearchedTechs.length), 1)[0];
+            researchedTechs.push(newTech);
+            addLog("You researched " + newTech + "!");
+            updateUI();
+            researchCost = Math.floor(researchCost * 1.5);
+            showNode("base");
+        } else {
+            addLog("You don't have enough silver to research.");
+            showNode("base");
+        }
     },
     minecollapseEvent: function() {
         const lostMiners = Math.min(miners, Math.floor(Math.random() * 3) + 1);
@@ -84,6 +96,7 @@ const interactions = {
     banditAttack: function() {
         let gainedSilver = -1;
         let lostPopulation = Math.min(population, Math.floor(Math.random() * 5) + 1);
+        gainedSilver = lostPopulation * 5;
         for (let i = 0; i < soldiers; i++) {
             if (Math.random() < 0.5 + soldiers / (soldiers+10)) { 
                 lostPopulation--;
@@ -92,7 +105,7 @@ const interactions = {
         lostPopulation = Math.max(0, lostPopulation);
         population -= lostPopulation;
         let stolenSilver;
-        if (lostPopulation < soldiers) {soldiers -= lostPopulation; gainedSilver = lostPopulation * 5; updateSilver(gainedSilver);}
+        if (lostPopulation < soldiers) {soldiers -= lostPopulation;  updateSilver(gainedSilver);}
         else {
             lostPopulation -= soldiers;
             soldiers = 0; 
@@ -126,7 +139,10 @@ const interactions = {
 const interactionText = {
   housebuilding: function(){
       return "Build a house (" + housecost + " silver)";
-  }  
+  }  ,
+  research: function() {
+      return "Research new techniques (" + researchCost + " silver)";
+  }
 };
 const eventsData = {
     // test events
@@ -270,7 +286,6 @@ function addLog(text) {
     sep.textContent = "-------------";
 
     logdiv.prepend(sep);
-    logdiv.prepend(line);
     logdiv.prepend(line);
     
 
