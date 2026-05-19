@@ -23,8 +23,10 @@ const minerdisp = document.getElementById("miners");
 const soldierdisp = document.getElementById("soldiers");
 const logdiv = document.getElementById("log");
 let population = 0, maxpopulation = 10, soldiers = 0, miners = 0, ownedMines = 1, day = 1;
+let silverMultiplier = 1;
+let safetyMultiplier = 1;
 let researchedTechs = [];
-let unresearchedTechs = ["Patio Process", "Stamp Mill", "Square Set Timbering", "Hydraulic Pumps", "Mercury Amalgamation", "Washoe Process", "Dynamite", "Dynamite+", "Dynamite++"];
+let unresearchedTechs = ["Patio Process", "Dynamite", "Stamp Mill", "Square Set Timbering", "Dynamite+", "Hydraulic Pumps", "Washoe Process", "Dynamite++"];
 const storyData = {
     // test storyline
     start:{
@@ -74,9 +76,21 @@ const interactions = {
     research: function() {
         if (silver >= researchCost) {
             updateSilver(0 - researchCost);
-            const newTech = unresearchedTechs.splice(Math.floor(Math.random() * unresearchedTechs.length), 1)[0];
-            researchedTechs.push(newTech);
-            addLog("You researched " + newTech + "!");
+            researchedTechs.push(unresearchedTechs[0]);
+            addLog("You researched " + unresearchedTechs[0] + "!");
+            if (unresearchedTechs[0] === "Dynamite" || unresearchedTechs[0] === "Patio Process" || unresearchedTechs[0] === "Stamp Mill" || unresearchedTechs[0] === "Hydraulic Pumps") {
+                silverMultiplier += 0.1;
+            }
+            if (unresearchedTechs[0] === "Square Set Timbering" || unresearchedTechs[0] === "Hydraulic Pumps") {
+                safetyMultiplier -= 0.15;
+            }
+            if (unresearchedTechs[0] === "Dynamite+") {
+                silverMultiplier += 0.2;
+            }
+            if (unresearchedTechs[0] === "Dynamite++" || unresearchedTechs[0] === "Washoe Process") {
+                silverMultiplier += 0.3;
+            }
+            unresearchedTechs.shift();
             updateUI();
             researchCost = Math.floor(researchCost * 1.5);
             showNode("base");
@@ -219,7 +233,7 @@ function hideEvent(){
     eventpopup.style.display = "none";
 }
 function tryshowEvent(){
-    if (!eventActive && Math.random() < 0.0008 * Math.sqrt(miners) / ownedMines) {
+    if (!eventActive && Math.random() < 0.0008 * Math.sqrt(miners) / ownedMines * safetyMultiplier) {
         showEvent("minecollapse");
     } else if (!eventActive && Math.random() < 0.001 + Math.sqrt(silver) * 0.0001) {
          showEvent("bandits");
@@ -390,7 +404,7 @@ function updateUI(){
 //-------------loop------------//
 function gameLoop(){
     if (eventpopup.style.display == "flex") return;
-    silver += miners * 0.3 * ownedMines;
+    silver += Math.min(miners, ownedMines * 5) * 0.3 * silverMultiplier;
     timecounter++;
     if (timecounter % 60 == 0) {
         day++;
