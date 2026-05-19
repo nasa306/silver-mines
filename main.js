@@ -63,6 +63,10 @@ const storyData = {
         choices:[
             {text:"Go back to base", next:"base"}
         ]
+    },
+    ending:{
+        text:"The end. Thanks for playing! this is filler text. Replace this with an actual ending based on the player's choices and perspective.",
+
     }
 };
 const interactions = {
@@ -462,11 +466,11 @@ function updateUI(){
 showPrimarySource(
     "United Times — June 1861",
 
-    `"Silver discoveries in the western territories continue to attract prospectors from across the nation.
+    `Silver discoveries in the western territories continue to attract prospectors from across the nation.
 
     Nobody knows how much silver lies beneath the surface, but the rush is on as more and more people stake their claims.
 
-Some even believe the region may soon rival California itself."`
+Some even believe the region may soon rival California itself.`
 );
 function gameLoop(){
     if (eventpopup.style.display == "flex") return;
@@ -483,5 +487,24 @@ function gameLoop(){
     tryshowEvent();
     updateUI();
 }
+function showEnding(){
+   if (perspective >= 2){
+        showPrimarySource("Nevada Mining Review — October 1875",
+            `The arrival of the railroads transformed the region into a center of industrial prosperity. Investors and mining companies brought employment, modern equipment, and national importance to what was once an isolated frontier. 
+
+            However, many small miners lost their claims. The town grows larger every year, though fewer people truly control their own future."`);
+    } else if (perspective <= -2){
+        showPrimarySource("The Independent Gazette — October 1875",
+            `The people of the Nevada silver camps resisted outside control and preserved the independence of their town. Local miners and merchants continued to manage their own affairs rather than surrendering authority to distant railroad companies and investors.
+
+            Though growth came more slowly, many citizens believed the community kept its freedom, traditions, and sense of fairness. Critics argued that the region missed opportunities for greater wealth and expansion, but supporters claimed the town belonged to its people rather than powerful corporations.`);
+    } else {
+        showPrimarySource("Travel Journal — 1875",
+            `The silver towns of Nevada are filled with both opportunity and hardship. Wealth moves through the region quickly, but so do danger, speculation, and uncertainty.`);
+    }
+    showNode("ending");
+
+}
+
 showNode("start");
 setInterval(gameLoop, 1000);
