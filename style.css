@@ -9,6 +9,90 @@ body {
     margin-top: 50px;
 }
 
+div:is(#primarysourcepopup) {
+    position: fixed;
+    inset: 0;
+
+    display: none;
+    justify-content: center;
+    align-items: center;
+
+    background: rgba(0,0,0,0.6);
+
+    z-index: 1000;
+
+    animation: fadeIn 0.5s;
+}
+
+div:is(#primarysourcecard) {
+    width: 600px;
+    max-width: 90vw;
+
+    background: #e7d9b7;
+
+    color: #2b2217;
+
+    border: 6px solid #8b6b3f;
+
+    padding: 25px;
+
+    box-shadow: 0 0 30px black;
+
+    font-family: Georgia, serif;
+
+    transform: rotate(-1deg);
+
+    animation: paperAppear 0.4s ease-out;
+}
+
+div:is(#primarysourcetitle) {
+    font-size: 28px;
+    font-weight: bold;
+
+    margin-bottom: 20px;
+
+    border-bottom: 2px solid #8b6b3f;
+}
+
+div:is(#primarysourcetext) {
+    white-space: pre-line;
+
+    line-height: 1.6;
+
+    font-size: 18px;
+
+    margin-bottom: 25px;
+}
+
+div:is(#primarysourcebutton) {
+    padding: 10px 18px;
+
+    font-size: 16px;
+
+    cursor: pointer;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes paperAppear {
+    from {
+        transform: scale(0.8) rotate(-4deg);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1) rotate(-1deg);
+        opacity: 1;
+    }
+}
 #game {
     width: auto;
 }

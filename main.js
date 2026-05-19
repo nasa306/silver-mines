@@ -25,6 +25,8 @@ const logdiv = document.getElementById("log");
 let population = 0, maxpopulation = 10, soldiers = 0, miners = 0, ownedMines = 1, day = 1;
 let silverMultiplier = 1;
 let safetyMultiplier = 1;
+let settlerChanceMultiplier = 1;
+let banditChanceMultiplier = 1;
 let researchedTechs = [];
 let unresearchedTechs = ["Patio Process", "Dynamite", "Stamp Mill", "Square Set Timbering", "Dynamite+", "Hydraulic Pumps", "Washoe Process", "Dynamite++"];
 const storyData = {
@@ -148,6 +150,26 @@ const interactions = {
         }
         hideEvent();
         updateUI();
+    },
+    railroadAccept: function() {
+        railroad = 1;
+        silverMultiplier += 0.25;
+        maxpopulation += 10;
+        settlerChanceMultiplier += 0.5;
+        banditChanceMultiplier += 0.5;
+        addLog("Railroad investors arrive and construction begins.");
+        addLog("Trade increases as supplies flow into town.");
+        hideEvent();
+        updateUI();
+    },
+
+    railroadReject: function() {
+        railroad = -1;
+        safetyMultiplier -= 0.05;
+        addLog("Town leaders reject outside railroad influence.");
+        addLog("The settlement remains independent but grows more slowly.");
+        hideEvent();
+        updateUI();
     }
 };
 const interactionText = {
@@ -180,7 +202,7 @@ const eventsData = {
         ]
     },
     railroadArrives:{
-        text: "The railroad offers to expand into your region.",
+        text: "Railroad companies offer to connect your settlement to major trade routes. Some citizens welcome economic growth, while others fear outside control.",
         choices: [
             {
                 text: "Accept investment",
@@ -188,7 +210,7 @@ const eventsData = {
                 perspective: "company"
             },
             {
-                text: "Reject and keep independence",
+                text: "Reject outside influence",
                 interaction: "railroadReject",
                 perspective: "locals"
             }
@@ -235,12 +257,12 @@ function hideEvent(){
 function tryshowEvent(){
     if (!eventActive && Math.random() < 0.0008 * Math.sqrt(miners) / ownedMines * safetyMultiplier) {
         showEvent("minecollapse");
-    } else if (!eventActive && Math.random() < 0.001 + Math.sqrt(silver) * 0.0001) {
+    } else if (!eventActive && Math.random() < 0.001 + Math.sqrt(silver) * 0.0001*banditChanceMultiplier) {
          showEvent("bandits");
     } else if (!eventActive && Math.random() < 0.0005 + day * 0.0002 && soldiers > 10) {
         showEvent("raidMine");
     }
-    if (!eventActive && phase == 2 && Math.random() < 0.0005) {
+    if (!eventActive && phase == 2 && Math.random() < 0.0005 && railroad == 0) {
         showEvent("railroadArrives");
     }
     if (!eventActive && phase == 3 && Math.random() < 0.0005) {
@@ -290,6 +312,22 @@ function passiveLogs() {
         } else if (phase == 2 && Math.random() < 0.05){
             queueLog("Merchants and gamblers arrive, bringing trade and excitement.", 0.5);
 
+        }
+        //Railroad based logs
+        if (railroad == 1 && Math.random() < 0.05) {
+            queueLog("Railroad shipments bring new goods and workers.", 0.5);
+        }
+
+        if (railroad == 1 && Math.random() < 0.05) {
+            queueLog("Large mining companies begin investing nearby.", 0.5);
+        }
+
+        if (railroad == -1 && Math.random() < 0.05) {
+            queueLog("Some citizens are proud of the town's independence.", 0.5);
+        }
+
+        if (railroad == -1 && Math.random() < 0.05) {
+            queueLog("Merchants complain about difficult travel routes.", 0.5);
         }
     }
 }
@@ -383,7 +421,7 @@ function forcesettlers(amount){
 }
 function tryAddSettler() {
     if (population < maxpopulation) {
-        if (Math.random() < (maxpopulation - population) * 0.01) { 
+        if (Math.random() < (maxpopulation - population) * 0.01 * settlerChanceMultiplier) { 
             population++;
             addLog("A person joined your town.");
         }
