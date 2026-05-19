@@ -222,6 +222,25 @@ function updateSilver(amount){
     silver += amount;
     silverdisp.textContent = Math.floor(silver);
 }
+//----------primary source---------//
+const primarypopup = document.getElementById("primarysourcepopup");
+const primarytitle = document.getElementById("primarysourcetitle");
+const primarytext = document.getElementById("primarysourcetext");
+const primarybutton = document.getElementById("primarysourcebutton");
+
+function showPrimarySource(title, text) {
+
+    primarytitle.textContent = title;
+    primarytext.textContent = text;
+
+    primarypopup.style.display = "flex";
+}
+
+function hidePrimarySource() {
+    primarypopup.style.display = "none";
+}
+
+primarybutton.onclick = hidePrimarySource;
 //-------------events-------------//
 function showEvent(eventName){
     const event = eventsData[eventName];
@@ -440,6 +459,15 @@ function updateUI(){
 }
 
 //-------------loop------------//
+showPrimarySource(
+    "United Times — June 1861",
+
+    `"Silver discoveries in the western territories continue to attract prospectors from across the nation.
+
+    Nobody knows how much silver lies beneath the surface, but the rush is on as more and more people stake their claims.
+
+Some even believe the region may soon rival California itself."`
+);
 function gameLoop(){
     if (eventpopup.style.display == "flex") return;
     silver += Math.min(miners, ownedMines * 5) * 0.3 * silverMultiplier;
