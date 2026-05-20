@@ -34,8 +34,7 @@ const storyData = {
     start:{
         text:"start of game - test",
         choices:[
-            {text:"Go to the mine", next:"mine", silver:10},
-            {text:"Rest at home", next:"base"}
+            {text:"Establish a Camp", next:"base"}
         ]
     },
     mine:{
@@ -65,7 +64,7 @@ const storyData = {
         ]
     },
     ending:{
-        text:"The end. Thanks for playing! this is filler text. Replace this with an actual ending based on the player's choices and perspective.",
+        text:"The end. Thanks for playing! this is filler text. Replace with actual ending based on player's choices and perspective.",
 
     }
 };
